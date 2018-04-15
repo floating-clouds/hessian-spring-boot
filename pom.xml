@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Change version command >mvn versions:set -DnewVersion=1.0.0.0 -->
+
+    <groupId>com.teclick.framework</groupId>
+    <artifactId>hessian-spring-boot</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <modules>
+        <module>hessian-spring-boot-autoconfigure</module>
+        <module>hessian-spring-boot-starter</module>
+    </modules>
+
+    <name>hessian-spring-boot</name>
+    <description>Spring Boot Support for Hessian</description>
+    <url>http://www./hessian-spring-boot/</url>
+    <inceptionYear>2018</inceptionYear>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <hessian-spring-boot.version>1.0.0-SNAPSHOT</hessian-spring-boot.version>
+        <hessian.version>4.0.51</hessian.version>
+
+        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.testSource>1.8</maven.compiler.testSource>
+        <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

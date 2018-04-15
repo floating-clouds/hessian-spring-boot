@@ -1,0 +1,3 @@
+# Hessian context initialize
+org.springframework.context.ApplicationContextInitializer=\
+com.teclick.framework.hessian.spring.boot.autoconfigure.HessianContextInitializer
