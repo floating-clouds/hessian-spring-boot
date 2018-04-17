@@ -1,5 +1,6 @@
 package com.teclick.framework.hessian.spring.boot.autoconfigure;
 
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
@@ -13,6 +14,7 @@ import java.lang.annotation.*;
 @Component
 public @interface HessianService {
 
+    @AliasFor(annotation = Component.class)
     String value() default "";
 
 }

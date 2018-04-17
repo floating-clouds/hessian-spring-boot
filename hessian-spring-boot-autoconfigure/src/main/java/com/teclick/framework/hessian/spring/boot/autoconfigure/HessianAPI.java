@@ -1,7 +1,5 @@
 package com.teclick.framework.hessian.spring.boot.autoconfigure;
 
-import org.springframework.beans.factory.annotation.Required;
-
 import java.lang.annotation.*;
 
 /**
@@ -12,7 +10,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface HessianAPI {
 
-    @Required
-    String endpoint();
+    String value() default "";
 
 }

@@ -1,1 +1,4 @@
-# Created by .ignore support plugin (hsz.mobi)
+.idea
+*.iml
+/hessian-spring-boot-autoconfigure/target/
+/hessian-spring-boot-starter/target/

@@ -4,27 +4,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.beans.factory.support.*;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
+import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 
-public class HessianContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+/**
+ * Created by Nelson Li on 2018-04-15 10:29.
+ */
+public class HessianContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext>, Ordered {
 
     private static final Logger logger = LoggerFactory.getLogger(HessianContextInitializer.class);
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         applicationContext.addBeanFactoryPostProcessor(new HessianFactoryPostProcessor());
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 
     private static class HessianFactoryPostProcessor implements BeanDefinitionRegistryPostProcessor, PriorityOrdered {
@@ -34,6 +41,9 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
         @Override
         public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
             this.registry = registry;
+            GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+            beanDefinition.setBeanClass(HessianAnnotationBeanPostProcessor.class);
+            registry.registerBeanDefinition("hessianAnnotationBeanPostProcessor", beanDefinition);
         }
 
         @Override
@@ -67,7 +77,13 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                                     BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(HessianServiceExporter.class);
                                     beanDefinitionBuilder.addPropertyReference("service", definitionName);
                                     beanDefinitionBuilder.addPropertyValue("serviceInterface", clazzInterface);
-                                    registry.registerBeanDefinition(hessianAPI.endpoint(), beanDefinitionBuilder.getBeanDefinition());
+                                    String endpoint = hessianAPI.value().trim();
+                                    if ("".equals(endpoint)) {
+                                        endpoint = "/" + clazzInterface.getName().replace(".", "/");
+                                    } else if (!endpoint.startsWith("/")) {
+                                        endpoint = "/" + endpoint;
+                                    }
+                                    registry.registerBeanDefinition(endpoint, beanDefinitionBuilder.getBeanDefinition());
                                 }
                             }
                         }
@@ -82,14 +98,37 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                 for (Field field : fields) {
                     HessianClient hessianClient = field.getAnnotation(HessianClient.class);
                     if (null != hessianClient) {
-                        String beanId = hessianClient.name();
+                        String beanId = hessianClient.value();
+                        if ("".equals(beanId)) {
+                            //Introspector.decapitalize(field.getType().getSimpleName());
+                            beanId = field.getType().getName();
+                        }
                         if (registry.containsBeanDefinition(beanId)) {
                             logger.info("The bean [" + beanId + "] already exists, skipping.");
                         } else {
-                            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(HessianProxyFactoryBean.class);
-                            beanDefinitionBuilder.addPropertyValue("serviceUrl", hessianClient.endpoint());
-                            beanDefinitionBuilder.addPropertyValue("serviceInterface", field.getType());
+                            String endpoint = hessianClient.endpoint().trim();
+                            if ("".equals(endpoint)) {
+                                HessianAPI hessianAPI = field.getType().getAnnotation(HessianAPI.class);
+                                String apiEndpoint = hessianAPI.value().trim();
+                                if ("".equals(apiEndpoint)) {
+                                    endpoint = field.getType().getName().replace(".", "/");
+                                } else {
+                                    if (apiEndpoint.startsWith("/")) {
+                                        endpoint = apiEndpoint.substring(1);
+                                    } else {
+                                        endpoint = apiEndpoint;
+                                    }
+                                }
+                            } else {
+                                if (endpoint.startsWith("/")) {
+                                    endpoint = endpoint.substring(1);
+                                }
+                            }
+                            String serviceUrl = String.format("%s://%s:%s/%s", hessianClient.protocol(), hessianClient.host(), hessianClient.port(), endpoint);
 
+                            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(HessianProxyFactoryBean.class);
+                            beanDefinitionBuilder.addPropertyValue("serviceUrl", serviceUrl);
+                            beanDefinitionBuilder.addPropertyValue("serviceInterface", field.getType());
                             registry.registerBeanDefinition(beanId, beanDefinitionBuilder.getBeanDefinition());
                         }
                     }

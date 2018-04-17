@@ -1,7 +1,5 @@
 package com.teclick.framework.hessian.spring.boot.autoconfigure;
 
-import org.springframework.beans.factory.annotation.Required;
-
 import java.lang.annotation.*;
 
 /**
@@ -12,10 +10,14 @@ import java.lang.annotation.*;
 @Documented
 public @interface HessianClient {
 
-    @Required
-    String name();
+    String value() default "";
 
-    @Required
-    String endpoint();
+    String protocol() default "http";
+
+    String host() default "127.0.0.1";
+
+    String port() default "8080";
+
+    String endpoint() default "";
 
 }

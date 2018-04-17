@@ -6,7 +6,7 @@
     <parent>
         <artifactId>hessian-spring-boot</artifactId>
         <groupId>com.teclick.framework</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.0.1.master</version>
     </parent>
 
     <artifactId>hessian-spring-boot-autoconfigure</artifactId>
