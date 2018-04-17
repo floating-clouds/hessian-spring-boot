@@ -13,6 +13,7 @@
     <modules>
         <module>hessian-spring-boot-autoconfigure</module>
         <module>hessian-spring-boot-starter</module>
+        <module>hessian-spring-boot-sample</module>
     </modules>
 
     <name>hessian-spring-boot</name>

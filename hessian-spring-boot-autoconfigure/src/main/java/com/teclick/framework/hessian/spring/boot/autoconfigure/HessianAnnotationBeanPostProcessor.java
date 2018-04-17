@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.lang.reflect.Field;
 
 /**
- * 这个类是通过自定义，手工注入的
+ * Created by Nelson Li on 2018-04-16
  */
 public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware {
 
@@ -23,7 +23,7 @@ public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, Ap
         Field[] fields = bean.getClass().getDeclaredFields();
         for (Field field : fields) {
             HessianClient hessianClient = field.getAnnotation(HessianClient.class);
-            if ((null != hessianClient) && isNull(bean, field)) {
+            if (null != hessianClient) {
                 logger.info("Handle bean [" + beanName + "] field: " + field.getName());
                 if (field.isAccessible()) {
                     setHessianClient(bean, field, hessianClient);
@@ -43,15 +43,6 @@ public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, Ap
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
-    }
-
-    private boolean isNull(Object bean, Field field) {
-        try {
-            Object obj = field.get(bean);
-            return null == obj;
-        } catch (IllegalAccessException e) {
-            return true;
-        }
     }
 
     private void setHessianClient(Object bean, Field field, HessianClient hessianClient) {

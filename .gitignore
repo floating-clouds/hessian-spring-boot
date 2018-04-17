@@ -1,4 +1,3 @@
 .idea
 *.iml
-/hessian-spring-boot-autoconfigure/target/
-/hessian-spring-boot-starter/target/
+/target/
