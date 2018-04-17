@@ -82,18 +82,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestClient {
 
+    // HessianProxyFactoryBean id is "first"
     @HessianClient(value = "first", host = "localhost")
     private HelloWorld_1 helloWorld_1;
 
+    // HessianProxyFactoryBean id is "second"
     @HessianClient(value = "second", host = "${host.name}")
     private HelloWorld_2 helloWorld_2;
 
-    @HessianClient(value = "third", host = "{host.name}, port = "8080")
+    // HessianProxyFactoryBean id is "third" & support placeholder
+    @HessianClient(value = "third", host = "${host.name}, port = "8080")
     private HelloWorld_3 helloWorld_3;
+    
+    // HessianProxyFactoryBean id is "com.teclick.spring.boot.demo.client.HelloWorld_3"
+    @HessianClient(host = "${host.name}, port = "8080")
+    private HelloWorld_3 helloWorld_3_1;
+
+    // HessianProxyFactoryBean id is "com.teclick.spring.boot.demo.client.HelloWorld_3"
+    @HessianClient(host = "${host.name}, port = "8080")
+    private HelloWorld_3 helloWorld_3_2;
+    
+    // HessianProxyFactoryBean id is "four"
+    @HessianClient(value = "four", host = "${host.name}, port = "8080")
+    private HelloWorld_3 helloWorld_3_3;
+    
+    /**
+     * helloWorld_3_1 & helloWorld_3_2 is the same instance
+     * because the HessianProxyFactoryBean id
+     * both com.teclick.spring.boot.demo.client.HelloWorld_3
+     * but helloWorld_3_3 is diffent with helloWorld_3_1 & helloWorld_3_2
+     * helloWorld_3_3 has new instance with id "four"
+     */
     
     // the follow code is your method
     public String yourMethod_1(String name) {
-        return helloWorld_1.sayHello(name); 
+        return helloWorld_1.sayHello(name);
     }
     ......
 }
