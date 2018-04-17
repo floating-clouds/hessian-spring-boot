@@ -11,7 +11,7 @@
 ````
 
 #### 2. Write an interface
-##### 2.1 Endpoint use interface resource path
+> ##### 2.1 Interface resource path as endpoint
 ```` java
 package com.teclick.spring.boot.demo.client;
 import com.teclick.framework.hessian.spring.boot.autoconfigure.HessianAPI;
@@ -21,7 +21,7 @@ public interface HelloWorld_1 {
     String sayHello(String name);
 }
 ````
-##### 2.2 Custom annotation value as endpoint
+>##### 2.2 Custom annotation value as endpoint
 ```` java
 package com.teclick.spring.boot.demo.client;
 import com.teclick.framework.hessian.spring.boot.autoconfigure.HessianAPI;
@@ -69,7 +69,7 @@ Mapped URL path [/a/b/c/HelloWorld_3] onto handler '/a/b/c/HelloWorld_3'
 ````
 
 ### Client side
-#### 1. Test your project
+#### Test your project
 ```` java
 package com.example.demo.test;
 
