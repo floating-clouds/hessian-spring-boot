@@ -65,7 +65,8 @@ public class HelloWorldServiceImpl implements HelloWorld_1, HelloWorld_2, HelloW
 java -jar your_package.jar  ## you will see the follow log
 Mapped URL path [/com/teclick/spring/boot/demo/client/HelloWorld_1] onto handler '/com/teclick/spring/boot/demo/client/HelloWorld_1'
 Mapped URL path [/HelloWorld_2] onto handler '/HelloWorld_2'
-Mapped URL path [/a/b/c/HelloWorld_3] onto handler '/a/b/c/HelloWorld_3'````
+Mapped URL path [/a/b/c/HelloWorld_3] onto handler '/a/b/c/HelloWorld_3'
+````
 
 ### Client side
 #### 1. Test your project
