@@ -21,7 +21,7 @@ public interface HelloWorld_1 {
     String sayHello(String name);
 }
 ````
-##### 2.2 Customer annotation value as endpoint
+##### 2.2 Custom annotation value as endpoint
 ```` java
 package com.teclick.spring.boot.demo.client;
 import com.teclick.framework.hessian.spring.boot.autoconfigure.HessianAPI;
