@@ -6,7 +6,7 @@
 
     <!-- Change version command >mvn versions:set -DnewVersion=1.0.0.0 -->
 
-    <groupId>com.teclick.framework</groupId>
+    <groupId>com.teclick.framework.spring-boot.hessian</groupId>
     <artifactId>hessian-spring-boot</artifactId>
     <version>0.0.1.master</version>
 
