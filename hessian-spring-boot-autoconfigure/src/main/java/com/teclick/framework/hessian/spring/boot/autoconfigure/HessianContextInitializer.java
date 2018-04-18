@@ -81,6 +81,7 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
         private void addHessianServiceImplBean(String definitionName, Class clazz) {
             Annotation hessianService = clazz.getAnnotation(HessianService.class);
             if (null != hessianService) {
+                logger.info("Found hessian service implement bean [{}]", definitionName);
                 Class[] clazzInterfaces = clazz.getInterfaces();
                 if (null != clazzInterfaces) {
                     for (Class clazzInterface : clazzInterfaces) {
@@ -99,6 +100,7 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                                         endpoint = "/" + endpoint;
                                     }
                                     registry.registerBeanDefinition(endpoint, beanDefinitionBuilder.getBeanDefinition());
+                                    logger.info("Publishing the endpoint [{}]", endpoint);
                                 }
                             }
                         }
@@ -118,8 +120,9 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                             //Introspector.decapitalize(field.getType().getSimpleName());
                             beanId = field.getType().getName();
                         }
+
                         if (registry.containsBeanDefinition(beanId)) {
-                            logger.info("The bean [" + beanId + "] already exists, skipping.");
+                            logger.info("The hessian client bean [{}] already exists, skipping.", beanId);
                         } else {
                             String endpoint = hessianClient.endpoint().trim();
                             if ("".equals(endpoint)) {
@@ -139,12 +142,14 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                                     endpoint = endpoint.substring(1);
                                 }
                             }
-                            String serviceUrl = String.format("%s://%s:%s/%s", hessianClient.protocol(), hessianClient.host(), hessianClient.port(), endpoint);
 
+                            String serviceUrl = String.format("%s://%s:%s/%s", hessianClient.protocol(), hessianClient.host(), hessianClient.port(), endpoint);
                             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(HessianProxyFactoryBean.class);
                             beanDefinitionBuilder.addPropertyValue("serviceUrl", serviceUrl);
                             beanDefinitionBuilder.addPropertyValue("serviceInterface", field.getType());
+
                             registry.registerBeanDefinition(beanId, beanDefinitionBuilder.getBeanDefinition());
+                            logger.info("Register hessian client bean[{}] success", beanId);
                         }
                     }
                 }
@@ -158,7 +163,7 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                     clazz = Class.forName(className);
                 }
             } catch (ClassNotFoundException e) {
-                logger.warn("Bean class not found.", e);
+                logger.warn("ClassNotFoundException: " + className, e);
             }
             return clazz;
         }

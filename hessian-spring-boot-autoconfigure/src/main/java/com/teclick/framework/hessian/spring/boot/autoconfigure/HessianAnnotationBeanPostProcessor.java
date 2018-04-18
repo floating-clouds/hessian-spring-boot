@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
  */
 public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware {
 
-    private static final Logger logger = LoggerFactory.getLogger(HessianAnnotationBeanPostProcessor.class);
+    private final Logger logger = LoggerFactory.getLogger(HessianAnnotationBeanPostProcessor.class);
 
     private ApplicationContext applicationContext;
 
@@ -40,13 +40,13 @@ public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, Ap
         for (Field field : fields) {
             HessianClient hessianClient = field.getAnnotation(HessianClient.class);
             if (null != hessianClient) {
-                logger.info("Handle bean [" + beanName + "] field: " + field.getName());
+                logger.info("Found hessian client field: [{}.{}]", beanName, field.getName());
                 if (field.isAccessible()) {
-                    setHessianClient(bean, field, hessianClient);
+                    setHessianClient(bean, field, hessianClient, beanName);
                 } else {
                     field.setAccessible(true);
                     try {
-                        setHessianClient(bean, field, hessianClient);
+                        setHessianClient(bean, field, hessianClient, beanName);
                     } finally {
                         field.setAccessible(false);
                     }
@@ -61,7 +61,7 @@ public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, Ap
         return bean;
     }
 
-    private void setHessianClient(Object bean, Field field, HessianClient hessianClient) {
+    private void setHessianClient(Object bean, Field field, HessianClient hessianClient, String beanName) {
         try {
             String beanId = hessianClient.value().trim();
             if ("".equals(beanId)) {
@@ -70,8 +70,9 @@ public class HessianAnnotationBeanPostProcessor implements BeanPostProcessor, Ap
             }
             Object propertyBean = applicationContext.getBean(beanId);
             field.set(bean, propertyBean);
+            logger.info("Hessian client field [{}.{}] assigned {}", beanName, field.getName(), propertyBean);
         } catch (IllegalAccessException e) {
-            logger.error("Set hessian client issue", e);
+            logger.error("Assigned hessian client", e);
         }
     }
 
