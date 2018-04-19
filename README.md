@@ -14,9 +14,9 @@
 > ##### 2.1 Interface resource path as endpoint
 ```` java
 package com.teclick.spring.boot.demo.client;
-import com.teclick.framework.hessian.spring.boot.autoconfigure.HessianAPI;
+import javax.ws.rs.Path;
 
-@HessianAPI  // <-- Define service endpoint 1
+@Path("")  // <-- Define service endpoint 1
 public interface HelloWorld_1 {
     String sayHello(String name);
 }
@@ -24,9 +24,9 @@ public interface HelloWorld_1 {
 >##### 2.2 Custom annotation value as endpoint
 ```` java
 package com.teclick.spring.boot.demo.client;
-import com.teclick.framework.hessian.spring.boot.autoconfigure.HessianAPI;
+import javax.ws.rs.Path;
 
-@HessianAPI("HelloWorld_2") // <-- Define service endpoint 2
+@Path("HelloWorld_2") // <-- Define service endpoint 2
 public interface HelloWorld_2 {
     String sayWorld(String name);
 }

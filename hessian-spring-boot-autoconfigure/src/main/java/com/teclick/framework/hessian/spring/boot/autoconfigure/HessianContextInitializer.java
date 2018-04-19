@@ -28,6 +28,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
+import javax.ws.rs.Path;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -88,7 +89,7 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                         Annotation[] annotations = clazzInterface.getAnnotations();
                         if (null != annotations) {
                             for (Annotation annotation : annotations) {
-                                HessianAPI hessianAPI = annotation instanceof HessianAPI ? ((HessianAPI) annotation) : null;
+                                Path hessianAPI = annotation instanceof Path ? ((Path) annotation) : null;
                                 if (null != hessianAPI) {
                                     BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(HessianServiceExporter.class);
                                     beanDefinitionBuilder.addPropertyReference("service", definitionName);
@@ -126,7 +127,7 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                         } else {
                             String endpoint = hessianClient.endpoint().trim();
                             if ("".equals(endpoint)) {
-                                HessianAPI hessianAPI = field.getType().getAnnotation(HessianAPI.class);
+                                Path hessianAPI = field.getType().getAnnotation(Path.class);
                                 String apiEndpoint = hessianAPI.value().trim();
                                 if ("".equals(apiEndpoint)) {
                                     endpoint = field.getType().getName().replace(".", "/");
