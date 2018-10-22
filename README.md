@@ -6,7 +6,7 @@
 <dependency>
     <groupId>com.teclick.framework.spring-boot.hessian</groupId>
     <artifactId>hessian-spring-boot-starter</artifactId>
-    <version>0.0.1-master</version>
+    <version>0.0.1.master</version>
 </dependency>
 ````
 

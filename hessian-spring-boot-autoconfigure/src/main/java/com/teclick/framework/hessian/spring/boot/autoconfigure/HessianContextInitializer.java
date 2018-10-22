@@ -101,7 +101,7 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                                         endpoint = "/" + endpoint;
                                     }
                                     registry.registerBeanDefinition(endpoint, beanDefinitionBuilder.getBeanDefinition());
-                                    logger.info("Publishing the endpoint [{}]", endpoint);
+                                    logger.info("Publishing hessian endpoint [{}]", endpoint);
                                 }
                             }
                         }
@@ -148,6 +148,9 @@ public class HessianContextInitializer implements ApplicationContextInitializer<
                             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(HessianProxyFactoryBean.class);
                             beanDefinitionBuilder.addPropertyValue("serviceUrl", serviceUrl);
                             beanDefinitionBuilder.addPropertyValue("serviceInterface", field.getType());
+                            beanDefinitionBuilder.addPropertyValue("connectTimeout", hessianClient.connectTimeout());
+                            beanDefinitionBuilder.addPropertyValue("readTimeout", hessianClient.readTimeout());
+                            beanDefinitionBuilder.addPropertyValue("debug", hessianClient.debug());
 
                             registry.registerBeanDefinition(beanId, beanDefinitionBuilder.getBeanDefinition());
                             logger.info("Register hessian client bean[{}] success", beanId);

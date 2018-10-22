@@ -36,4 +36,10 @@ public @interface HessianClient {
 
     String endpoint() default "";
 
+    long connectTimeout() default 15000;
+
+    long readTimeout() default 10000;
+
+    boolean debug() default false;
+
 }
